@@ -7,4 +7,5 @@ seaborn
 dvc
 notebook
 Flask
--e .
+#-e .
+nltk
