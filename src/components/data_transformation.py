@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from sklearn.preprocessing import LabelEncoder
 from src.logger import logging
 from src.exception import CustomException
+from src.utils import transform_text, save_object
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -28,30 +29,7 @@ class DataTransformationConfig:
 class DataTransformation:
     def __init__(self):
         self.transformation_config=DataTransformationConfig()
-        self.ps=PorterStemmer()
-
-    def transform_text(self,text):
-        """
-        Main notebook text processing waala logic hi
-        """        
-        try:
-            text=str(text).lower()
-            text=nltk.word_tokenize(text)
-
-            #remove special characters
-            y=[i for i in text if i.isalnum()]
-
-            #remove stopwords and punctuation
-            stop_words=set(stopwords.words('english'))
-            y=[i for i in y if i not in stop_words and i not in string.punctuation]
-
-            #stemming
-            y=[self.ps.stem(i) for i in y]
-
-            return " ".join(y)
-        except Exception as e:
-            raise CustomException(e, sys)
-
+        
     def initiate_data_transformation(self, train_path, test_path):
         try:
             logging.info("data transformation has started")
@@ -85,8 +63,8 @@ class DataTransformation:
 
             # text transformation
             logging.info("applying text transformation(stemming & stopwords) removal")
-            train_df['transformed_text']=train_df['text'].apply(self.transform_text)
-            test_df['transformed_text']=test_df['text'].apply(self.transform_text)
+            train_df['transformed_text']=train_df['text'].apply(transform_text)
+            test_df['transformed_text']=test_df['text'].apply(transform_text)
 
             #3 label encoding on target
             logging.info("applying label encoding on target column")
@@ -101,8 +79,10 @@ class DataTransformation:
             # save the label encoder object
             os.makedirs(os.path.dirname(self.transformation_config.feature_encoder_path), exist_ok=True)
 
-            with open(self.transformation_config.feature_encoder_path,"wb") as f:
-                pickle.dump(encoder,f)
+            save_object(
+                        self.transformation_config.feature_encoder_path,
+                                    encoder
+            )
             logging.info("Label Encoder object saved as pickle file")   
 
             train_df.to_csv(self.transformation_config.transformed_train_path, index=False, header=True)
@@ -119,8 +99,10 @@ class DataTransformation:
 
             # Vectorizer object ko save karna
             os.makedirs(os.path.dirname(self.transformation_config.vectorizer_path), exist_ok=True)
-            with open(self.transformation_config.vectorizer_path, "wb") as f:
-                pickle.dump(cv, f)
+            save_object(
+                self.transformation_config.vectorizer_path,
+                cv
+            )
             logging.info("Vectorizer object saved as pickle file")
 
             return (

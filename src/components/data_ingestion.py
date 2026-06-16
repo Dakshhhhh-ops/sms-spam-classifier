@@ -49,11 +49,3 @@ class DataIngestion:
             raise CustomException(e,sys)
             
 
-if __name__ == "__main__":
-    try:
-        obj = DataIngestion()
-        train_data, test_data = obj.initiate_data_ingestion()
-        print(f"Kaam khatam! Train path: {train_data}")
-
-    except Exception as e:
-        print(e)

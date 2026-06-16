@@ -11,3 +11,4 @@ Flask
 nltk
 xgboost
 dataclasses
+mlflow
