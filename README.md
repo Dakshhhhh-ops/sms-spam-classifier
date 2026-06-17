@@ -1,99 +1,208 @@
 # 🛡️ SpamShield — SMS Spam Classifier
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://sms-spam-classifier-qpnp2zesr287tny2mmidfa.streamlit.app/)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?style=for-the-badge\&logo=streamlit\&logoColor=white)](https://sms-spam-classifier-qpnp2zesr287tny2mmidfa.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge\&logo=python\&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge\&logo=fastapi\&logoColor=white)](https://fastapi.tiangolo.com)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-ML-F7931E?style=for-the-badge\&logo=scikitlearn\&logoColor=white)](https://scikit-learn.org)
+[![Render](https://img.shields.io/badge/Render-Deployed-46E3B7?style=for-the-badge\&logo=render\&logoColor=black)](https://render.com)
 
-An end-to-end machine learning project that classifies SMS messages as **Spam** or **Ham (Not Spam)** with real-time confidence scores. Built with a Scikit-Learn model backend served via a FastAPI REST API and a polished Streamlit frontend.
+# 📌 Overview
 
----
+SpamShield is an end-to-end machine learning application that classifies SMS messages as **Spam** or **Ham (Not Spam)** in real time.
 
-## 🔗 Live Demo
+The project combines:
 
-👉 **[Try it here](https://sms-spam-classifier-qpnp2zesr287tny2mmidfa.streamlit.app/)**
+* NLP preprocessing with NLTK
+* TF-IDF feature extraction
+* Scikit-Learn classification model
+* FastAPI REST API backend
+* Streamlit frontend
+* Cloud deployment using Render and Streamlit Cloud
 
-Paste any SMS or message and get an instant verdict with spam/ham probability scores.
-
----
-
-## ✨ Features
-
-- **Real-time classification** — Instantly detects Spam or Ham with a single click
-- **Confidence scores** — Returns both spam and ham probabilities with visual progress bars
-- **NLP preprocessing pipeline** — Lowercasing, tokenization, stopword removal, and Porter stemming
-- **FastAPI backend** — Clean REST API with Pydantic-validated request/response schemas
-- **MLflow model tracking** — Experiments tracked and models logged with MLflow
-- **Streamlit frontend** — A polished, dark-themed UI with animated verdict banners
-- **Decoupled architecture** — Frontend and backend are independently deployable
+Users can submit any SMS message and instantly receive a prediction along with confidence scores.
 
 ---
 
-## 🏗️ Project Structure
+# 🔗 Live Demo
 
+### Frontend
+
+https://sms-spam-classifier-qpnp2zesr287tny2mmidfa.streamlit.app/
+
+### Backend API
+
+https://sms-spam-classifier-2-t2cs.onrender.com
+
+### Swagger Documentation
+
+https://sms-spam-classifier-2-t2cs.onrender.com/docs
+
+---
+
+# ✨ Features
+
+* Real-time SMS spam detection
+* Spam and Ham confidence scores
+* NLP preprocessing pipeline
+* FastAPI-powered REST API
+* Streamlit interactive frontend
+* Pydantic schema validation
+* Modular service-based architecture
+* Cloud deployment
+
+---
+
+# 🏗️ System Architecture
+
+```text
+User
+ │
+ ▼
+Streamlit Frontend
+ │
+ ▼
+FastAPI Backend
+ │
+ ▼
+Prediction Service
+ │
+ ▼
+Predict Pipeline
+ │
+ ▼
+TF-IDF Vectorizer
+ │
+ ▼
+Scikit-Learn Model
+ │
+ ▼
+Prediction Response
 ```
+
+---
+
+# 📂 Project Structure
+
+```text
 sms-spam-classifier/
 │
-├── app.py                  # FastAPI backend (REST API)
-├── frontend.py             # Streamlit frontend UI
-├── main.py                 # Entry point / pipeline runner
-├── setup.py                # Package setup
-├── requirements.txt        # Python dependencies
+├── app.py
+├── frontend.py
+├── requirements.txt
+├── setup.py
+│
+├── artifacts/
+│   ├── model.pkl
+│   └── vectorizer.pkl
 │
 ├── src/
+│   ├── exception.py
+│   │
+│   ├── pipeline/
+│   │   └── predict_pipeline.py
+│   │
 │   ├── schemas/
-│   │   └── prediction_schema.py   # Pydantic request/response models
+│   │   └── prediction_schema.py
+│   │
 │   ├── services/
-│   │   └── prediction_service.py  # Model loading & inference logic
-│   └── exception.py               # Custom exception handling
+│   │   └── prediction_service.py
+│   │
+│   └── utils.py
 │
-├── model/                  # Serialized model and vectorizer artifacts
-├── artifacts/              # Pipeline output artifacts
-├── notebook/               # EDA and model training Jupyter notebooks
+├── notebook/
 │
-├── .gitignore
-└── LICENSE
+└── README.md
 ```
 
 ---
 
-## 🧠 How It Works
+# 🧠 NLP Pipeline
 
-### NLP Preprocessing Pipeline
+Every incoming message passes through the following preprocessing pipeline:
 
-Each incoming message is processed through a multi-step pipeline before inference:
+### 1. Lowercasing
 
-1. **Lowercasing** — Normalizes text to lowercase
-2. **Tokenization** — Splits text into individual tokens using NLTK
-3. **Alphanumeric filtering** — Removes punctuation and special characters
-4. **Stopword removal** — Drops common English stopwords (e.g. "the", "is")
-5. **Porter Stemming** — Reduces words to their root form (e.g. "winning" → "win")
+Converts text to lowercase for consistency.
 
-### Model
+### 2. Tokenization
 
-The classifier is trained using Scikit-Learn on the [UCI SMS Spam Collection Dataset](https://archive.ics.uci.edu/ml/datasets/sms+spam+collection) and tracked with **MLflow**. The trained model and TF-IDF vectorizer are serialized and loaded at inference time.
+Splits the message into individual words using NLTK.
 
-### API
+### 3. Alphanumeric Filtering
 
-The FastAPI backend exposes the following endpoints:
+Removes punctuation and special characters.
 
-| Method | Endpoint | Description |
-|--------|------------------|------------------------------|
-| `GET` | `/` | Health check / home |
-| `GET` | `/health` | Returns model status & version |
-| `POST` | `/api/v1/predict` | Classifies a message |
+### 4. Stopword Removal
 
-**Request body (`/api/v1/predict`):**
+Removes common English stopwords.
+
+Example:
+
+```text
+the
+is
+a
+and
+```
+
+### 5. Porter Stemming
+
+Converts words to their root forms.
+
+Example:
+
+```text
+winning → win
+running → run
+played → play
+```
+
+### 6. TF-IDF Vectorization
+
+Transforms processed text into numerical features suitable for machine learning.
+
+---
+
+# 🤖 Model
+
+The model is trained using the UCI SMS Spam Collection dataset.
+
+The trained classifier and vectorizer are serialized and stored as:
+
+```text
+artifacts/model.pkl
+artifacts/vectorizer.pkl
+```
+
+These artifacts are loaded during application startup and used for real-time inference.
+
+---
+
+# 🚀 API Endpoints
+
+| Method | Endpoint        | Description          |
+| ------ | --------------- | -------------------- |
+| GET    | /               | Home endpoint        |
+| GET    | /health         | Service health check |
+| POST   | /api/v1/predict | Predict spam or ham  |
+
+---
+
+## Request
+
 ```json
 {
-  "text": "Congratulations! You've won a FREE prize. Call now!"
+  "text": "Congratulations! You've won a FREE prize."
 }
 ```
 
-**Response:**
+---
+
+## Response
+
 ```json
 {
-  "text": "Congratulations! You've won a FREE prize. Call now!",
+  "text": "Congratulations! You've won a FREE prize.",
   "prediction": "Spam",
   "spam_probability": 0.97,
   "ham_probability": 0.03
@@ -102,103 +211,112 @@ The FastAPI backend exposes the following endpoints:
 
 ---
 
-## 🚀 Getting Started
+# 🚀 Local Setup
 
-### Prerequisites
-
-- Python 3.10+
-- pip
-
-### 1. Clone the repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/Dakshhhhh-ops/sms-spam-classifier.git
 cd sms-spam-classifier
 ```
 
-### 2. Install dependencies
+## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Download NLTK data
+## Download NLTK Resources
 
 ```python
 import nltk
-nltk.download('punkt')
-nltk.download('punkt_tab')
-nltk.download('stopwords')
+
+nltk.download("punkt")
+nltk.download("punkt_tab")
+nltk.download("stopwords")
 ```
 
-### 4. Run the FastAPI backend
+## Start FastAPI Backend
 
 ```bash
 uvicorn app:app --reload
 ```
 
-The API will be available at `http://localhost:8000`.  
-Interactive docs (Swagger UI): `http://localhost:8000/docs`
+Backend:
 
-### 5. Run the Streamlit frontend
+```text
+http://localhost:8000
+```
+
+Swagger Docs:
+
+```text
+http://localhost:8000/docs
+```
+
+## Start Streamlit Frontend
 
 ```bash
 streamlit run frontend.py
 ```
 
-> **Note:** The frontend is configured to call the hosted API at `https://sms-spam-classifier-2-t2cs.onrender.com/api/v1/predict`. To point it at your local backend, update the `API_URL` variable in `frontend.py`.
+---
+
+# 📦 Tech Stack
+
+### Machine Learning
+
+* Scikit-Learn
+* NLTK
+* NumPy
+* Pandas
+
+### Backend
+
+* FastAPI
+* Pydantic
+* Uvicorn
+
+### Frontend
+
+* Streamlit
+
+### Deployment
+
+* Render
+* Streamlit Cloud
 
 ---
 
-## 📦 Dependencies
+# 📸 Screenshots
 
-| Package | Purpose |
-|-------------|----------------------------------|
-| `scikit-learn` | ML model training & inference |
-| `nltk` | Text preprocessing |
-| `fastapi` | REST API framework |
-| `pydantic` | Schema validation |
-| `mlflow` | Experiment tracking |
-| `streamlit` | Frontend UI |
-| `xgboost` | Gradient boosting classifier |
-| `numpy` | Numerical operations |
-| `pandas` | Data manipulation |
-| `matplotlib` / `seaborn` | EDA visualizations |
-| `requests` | HTTP calls from the frontend |
+Add screenshots of:
+
+* Spam prediction
+* Ham prediction
+* Swagger API documentation
+
+These significantly improve recruiter impressions.
 
 ---
 
-## 🧪 Running the Training Pipeline
+# 🎯 Key Highlights
 
-To retrain the model from scratch, run the pipeline via:
-
-```bash
-python main.py
-```
-
-Training notebooks with EDA and model experiments are available in the `notebook/` directory.
-
----
-
-## 📂 Key Files
-
-| File | Description |
-|---|---|
-| `app.py` | FastAPI app with `/predict` endpoint |
-| `frontend.py` | Streamlit UI with dark theme, verdict banners, and confidence bars |
-| `main.py` | Pipeline orchestration script |
-| `src/services/prediction_service.py` | Loads model and runs inference |
-| `src/schemas/prediction_schema.py` | Pydantic models for API I/O |
+* Built a complete end-to-end ML application
+* Exposed model inference through REST APIs
+* Designed a modular prediction pipeline
+* Implemented schema validation using Pydantic
+* Deployed backend and frontend independently
+* Added confidence-based predictions with visual feedback
 
 ---
 
-## 📄 License
+# 👤 Author
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+Daksh Wadhwa
 
----
+GitHub:
+https://github.com/Dakshhhhh-ops
 
-## 👤 Author
-
-**Daksh**  
-GitHub: [@Dakshhhhh-ops](https://github.com/Dakshhhhh-ops)
+LinkedIn:
+(Add your LinkedIn profile link here)
