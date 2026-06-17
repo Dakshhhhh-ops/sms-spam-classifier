@@ -389,8 +389,7 @@ if predict_clicked:
             )
 
             result = response.json()
-            st.write("DEBUG RESPONSE")
-            st.json(result)
+            
 
 
             prediction = result["prediction"]
