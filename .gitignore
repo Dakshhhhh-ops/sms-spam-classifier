@@ -52,7 +52,7 @@ coverage.xml
 cover/
 venv/
 chi-env/
-artifacts/
+
 mlruns/
 mlflow.db
 __pycache__/
