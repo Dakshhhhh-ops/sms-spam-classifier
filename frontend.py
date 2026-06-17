@@ -14,7 +14,7 @@ nltk.download('stopwords')
 # --------------------------
 # Preprocessing Setup
 # --------------------------
-API_URL = "http://127.0.0.1:8000/api/v1/predict"
+API_URL = "https://sms-spam-classifier-2-t2cs.onrender.com/api/v1/predict"
 
 ps = PorterStemmer()
 
@@ -389,6 +389,8 @@ if predict_clicked:
             )
 
             result = response.json()
+            st.write("DEBUG RESPONSE")
+            st.json(result)
 
 
             prediction = result["prediction"]
