@@ -1,13 +1,11 @@
-tensorflow
+
 numpy
 pandas
 scikit-learn
 matplotlib
 seaborn
-dvc
-notebook
 Flask
--e .
+#-e .
 nltk
 xgboost
 dataclasses
