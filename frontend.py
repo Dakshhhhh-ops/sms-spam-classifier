@@ -14,6 +14,7 @@ nltk.download('stopwords')
 # --------------------------
 # Preprocessing Setup
 # --------------------------
+API_URL = "http://127.0.0.1:8000/api/v1/predict"
 
 ps = PorterStemmer()
 
@@ -383,23 +384,16 @@ if predict_clicked:
         try:
 
             response = requests.post(
-                "http://127.0.0.1:8000/api/v1/predict",
-                json={
-                    "text": input_sms
-                }
+                API_URL,
+                json={"text": input_sms}
             )
 
             result = response.json()
 
-            prediction = result["prediction"]
 
-            # Temporary confidence values
-            if prediction == "Spam":
-                spam_prob = 0.95
-                ham_prob = 0.05
-            else:
-                spam_prob = 0.05
-                ham_prob = 0.95
+            prediction = result["prediction"]
+            spam_prob = result["spam_probability"]
+            ham_prob = result["ham_probability"]
 
             spam_pct = int(spam_prob * 100)
             ham_pct = int(ham_prob * 100)

@@ -40,10 +40,26 @@ class PredictPipeline:
                 vector_input
             )[0]
 
-            if prediction == 1:
-                return "Spam"
+            probabilities = self.model.predict_proba(
+                vector_input
+            )[0]
 
-            return "Ham"
+            ham_probability = probabilities[0]
+            spam_probability = probabilities[1]
+
+            return {
+                "prediction": (
+                    "Spam"
+                    if prediction == 1
+                    else "Ham"
+                ),
+                "spam_probability": float(
+                    spam_probability
+                ),
+                "ham_probability": float(
+                    ham_probability
+                )
+            }
 
         except Exception as e:
             raise CustomException(e, sys)

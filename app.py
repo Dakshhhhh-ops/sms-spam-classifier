@@ -68,10 +68,17 @@ def predict(data: PredictionRequest):
             data.text
         )
 
-        return PredictionResponse(
-            text=data.text,
-            prediction=prediction
+        result = service.predict(
+            data.text
         )
+        print("RESULT:", result)
+
+        return {
+            "text": data.text,
+            "prediction": result["prediction"],
+            "spam_probability": result["spam_probability"],
+            "ham_probability": result["ham_probability"]
+        }
 
     except CustomException as e:
 

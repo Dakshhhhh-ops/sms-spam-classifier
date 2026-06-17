@@ -1,17 +1,15 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class PredictionRequest(BaseModel):
-    text: str = Field(
-        ...,
-        min_length=1,
-        description="SMS text to classify"
-    )
+    text: str
 
 
 class PredictionResponse(BaseModel):
     text: str
     prediction: str
+    spam_probability: float
+    ham_probability: float
 
 
 class HealthResponse(BaseModel):
